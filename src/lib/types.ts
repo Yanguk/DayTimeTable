@@ -2,8 +2,8 @@ export type ResponseBody = DayTimetable[];
 export type Timestamp = number;
 
 export interface DayTimetable {
-  start_of_day: number;
-  day_modifier: number;
+  start_of_day: Timestamp;
+  day_modifier: Timestamp;
   is_day_off: boolean;
   timeslots: Timeslot[];
 }

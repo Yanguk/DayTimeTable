@@ -4,12 +4,10 @@ import { AppModule } from 'src/app.module';
 import * as request from 'supertest';
 import * as events from '../data/events.json';
 import * as workhours from '../data/workhours.json';
-import { TimeSlotsService } from 'src/time-slots/time-slots.service';
 import { DayTimetable, Timestamp } from 'src/lib/types';
 
 describe('AppModule (e2e)', () => {
   let app: INestApplication;
-  let timeSlotsService: TimeSlotsService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,7 +15,6 @@ describe('AppModule (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    timeSlotsService = new TimeSlotsService();
 
     await app.init();
   });
@@ -48,6 +45,7 @@ describe('AppModule (e2e)', () => {
         const dayTimeTables: DayTimetable[] = response.body;
 
         let dayIdx = 0;
+
         const oneDay: Timestamp = 60 * 60 * 24;
 
         for (const dayTimeTable of dayTimeTables) {
