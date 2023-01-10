@@ -37,7 +37,7 @@ export class TimeSlotsController {
       is_ignore_workhour,
     } = timeSlotsDto;
 
-    const UTCtimeStamp: Timestamp =
+    const utcTimeStamp: Timestamp =
       convertStringToTimeStamp(start_day_identifier);
 
     const { format } = new Intl.DateTimeFormat('en-GB', {
@@ -46,7 +46,7 @@ export class TimeSlotsController {
       timeZone: timezone_identifier,
     });
 
-    const gmtTime: string = format(UTCtimeStamp * 1000)
+    const gmtTime: string = format(utcTimeStamp * 1000)
       .split(' ')
       .slice(-1)[0]
       .slice(3);
@@ -54,7 +54,7 @@ export class TimeSlotsController {
     const oneHour: Timestamp = 60 * 60;
     const oneDay: Timestamp = oneHour * 24;
 
-    const startTimestamp: Timestamp = UTCtimeStamp - Number(gmtTime) * oneHour;
+    const startTimestamp: Timestamp = utcTimeStamp - Number(gmtTime) * oneHour;
 
     const dayTimeTables: ResponseBody = range(days)
       .map((idx) => startTimestamp + idx * oneDay)

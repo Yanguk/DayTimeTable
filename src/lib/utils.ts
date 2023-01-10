@@ -11,8 +11,8 @@ export const convertStringToTimeStamp = (dateStr: string) => {
   const month = dateStr.slice(4, 6);
   const day = dateStr.slice(6);
 
-  const fullDate = `${year}-${month}-${day}`;
-  const localDate = new Date(fullDate);
+  const fullDate = `${year}-${month}-${day}T00:00:00Z`;
+  const utcDate = new Date(fullDate);
 
-  return Math.floor(localDate.getTime() / 1000);
+  return Math.floor(utcDate.getTime() / 1000);
 };
