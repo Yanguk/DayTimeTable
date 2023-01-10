@@ -6,15 +6,13 @@ export const range = function (maxIdx: number): number[] {
   return Array.from({ length: maxIdx }, (_, idx) => idx);
 };
 
-export const convertDateToTimeStamp = (date: Date): number =>
-  Math.floor(date.getTime() / 1000);
-
-export const convertStringToDate = (dateStr: string): Date => {
+export const convertStringToTimeStamp = (dateStr: string) => {
   const year = dateStr.slice(0, 4);
   const month = dateStr.slice(4, 6);
   const day = dateStr.slice(6);
 
-  const fullDate = `${year}-${month}-${day}T00:00:00Z`;
+  const fullDate = `${year}-${month}-${day}`;
+  const localDate = new Date(fullDate);
 
-  return new Date(fullDate);
+  return Math.floor(localDate.getTime() / 1000);
 };
