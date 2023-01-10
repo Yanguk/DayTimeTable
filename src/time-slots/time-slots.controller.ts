@@ -54,11 +54,11 @@ export class TimeSlotsController {
     const oneHour: Timestamp = 60 * 60;
     const oneDay: Timestamp = oneHour * 24;
 
-    const [gmtHour, gmtMin] = gmtTime.split(':');
+    const [gmtHour, gmtMin] = gmtTime.split(':').map(Number);
 
     const gmtTimeHour = gmtMin
-      ? (Number(gmtHour) + Number(gmtMin) / 60) * oneHour
-      : Number(gmtHour) * oneHour;
+      ? (gmtHour + gmtMin / 60) * oneHour
+      : gmtHour * oneHour;
 
     const startTimestamp: Timestamp = utcTimeStamp - gmtTimeHour;
 
