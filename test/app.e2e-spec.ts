@@ -79,16 +79,16 @@ describe('AppModule (e2e)', () => {
       it('is_ignore_schedule: false 일경우 겹치는 날이 존재하는지 점검', async () => {
         const mockData = {
           start_day_identifier: '20210509',
-          days: 2,
-          service_duration: 3600,
-          timeslot_interval: 1800,
+          days: 3,
+          service_duration: 6000,
+          timeslot_interval: 2000,
           is_ignore_schedule: false,
           is_ignore_workhour: false,
           timezone_identifier: 'Asia/Seoul',
         };
 
         const seoulTimestamp: Timestamp = 1620486000000 / 1000;
-        const days = ['sun', 'mon'];
+        const days = ['sun', 'mon', 'tue'];
 
         const response = await request(app.getHttpServer())
           .post('/getTimeSlots')
@@ -127,7 +127,7 @@ describe('AppModule (e2e)', () => {
       it('is_ignore_schedule: true, is_ignore_workhour: true 일경우 타임슬롯은 하루시간이 다 포함되었어야함', async () => {
         const mockData = {
           start_day_identifier: '20210509',
-          days: 1,
+          days: 3,
           service_duration: 4200,
           timeslot_interval: 2000,
           is_ignore_schedule: true,
@@ -142,21 +142,32 @@ describe('AppModule (e2e)', () => {
           .send(mockData)
           .expect(200);
 
-        const dayTimeTable: DayTimetable = response.body[0];
-        const { timeslots } = dayTimeTable;
+        const dayTimeTables: DayTimetable[] = response.body;
 
-        let idx = 0;
+        const oneDay = 60 * 60 * 24;
 
-        for (const timeslot of timeslots) {
-          const serviceStartTime =
-            seoulTimestamp + idx * mockData.timeslot_interval;
+        let dayCount = 0;
 
-          expect(timeslot.begin_at).toBe(serviceStartTime);
-          expect(timeslot.end_at).toBe(
-            serviceStartTime + mockData.service_duration,
-          );
+        for (const dayTimeTable of dayTimeTables) {
+          const { timeslots } = dayTimeTable;
 
-          idx += 1;
+          let idx = 0;
+
+          for (const timeslot of timeslots) {
+            const serviceStartTime =
+              seoulTimestamp +
+              dayCount * oneDay +
+              idx * mockData.timeslot_interval;
+
+            expect(timeslot.begin_at).toBe(serviceStartTime);
+            expect(timeslot.end_at).toBe(
+              serviceStartTime + mockData.service_duration,
+            );
+
+            idx += 1;
+          }
+
+          dayCount += 1;
         }
       });
     });
